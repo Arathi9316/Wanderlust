@@ -77,6 +77,7 @@ body {
   border-radius: 1rem;
   width: 100%;
   object-fit: cover;
+  height: 20rem;
 }
 .card-body {
   padding: 0;
@@ -99,11 +100,32 @@ body {
   left: auto;
   padding: 0;
 }
+.listing-card {
+  width: 20rem;
+}
+@media (min-width: 200px) and (max-width: 685px) {
+  .listing-card {
+    width: 10rem;
+  }
+  .card-img-top {
+    height: 10rem;
+  }
+  .card-title {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+  .card-price {
+    font-size: 0.7rem;
+  }
+}
 
 .showpg {
   /* width: 100%; */
   height: 30vh;
-  width: 80vh !important;
+  width: 90%;
+}
+.mapboxgl-canvas {
+  border-radius: 1rem;
 }
 .searchpg {
   height: 30vh;
@@ -114,6 +136,7 @@ body {
 }
 .edit-btn {
   height: 39px;
+  width: 5rem;
 }
 .delete-btn {
   background-color: #fe424d;
@@ -147,10 +170,41 @@ body {
   height: 3.24rem;
   padding: 1rem;
   margin-left: 2rem;
-  display: flex;
-  align-items: center;
+  margin-top: 1.5rem;
+  position: relative;
+}
+/* dropdown */
+.dropdown .btn {
+  border-radius: 0.8rem;
+  font-size: 0.8rem;
+}
+.dropdown-menu {
+  max-height: 300px;
+  width: 170px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.newtax {
+  border-radius: 0.8rem;
+  border: 1px solid black;
+  padding: 0.5rem;
+  display: none;
+  margin-left: 2rem;
+  margin-top: 0.5rem;
+  height: 1rem;
+  box-sizing: unset;
+}
+@media (min-width: 200px) and (max-width: 998px) {
+  .newtax {
+    display: flex;
+    align-items: center;
+  }
 }
 
+.optionss {
+  display: flex;
+  justify-content: space-between;
+}
 /* map */
 #map {
   height: 400px;

@@ -82,6 +82,7 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
+  console.log(res.locals.currUser);
   next();
 });
 
@@ -102,7 +103,7 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-app.all("/", (req, res, next) => {
+app.all(/.*/, (req, res, next) => {
   next(new ExpressError(404, "Page not found"));
 });
 //error handling middleware
@@ -114,4 +115,7 @@ app.use((err, req, res, next) => {
 
 app.listen(8080, () => {
   console.log("Server is listening to port 8080");
+});
+store.on("error", (err) => {
+  console.log("Error in Mongo session store", err);
 });

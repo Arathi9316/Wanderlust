@@ -2,88 +2,131 @@
 
 
 <!-- <h3>All listings</h3> -->
- <div id="filters">
-  <div class="filter">
+<div class="d-flex">
+ <div id="filters " class="d-none d-md-flex ms-3">
+  <div class="filter text-center">
     <div><i class="fa-solid fa-fire"></i></div>
     <p>Trending</p>
   </div>
-   <div class="filter">
+   <div class="filter text-center">
     <div><i class="fa-solid fa-bed"></i></div>
     <p>Rooms</p>
   </div>
-   <div class="filter">
+   <div class="filter text-center">
     <div><i class="fa-solid fa-mountain-city"></i></div>
     <p>Iconic Cities</p>
   </div>
-  <div class="filter">
-    <div><i class="fa-solid fa-mountain"></i></div>
-    <p>Mountains</p>
-  </div>
-  <div class="filter">
+  
+  <div class="filter text-center">
     <div><i class="fa-solid fa-chess-rook"></i></div>
     <p>Castles</p>
   </div>
-   <div class="filter">
+   <div class="filter text-center">
     <div><i class="fa-solid fa-person-swimming"></i></div>
     <p>Amazing pools</p>
   </div>
-  <div class="filter">
+ 
+  <div class="filter text-center">
    <div><i class="fa-solid fa-campground"></i></div>
     <p>Camping</p>
   </div>
-  <div class="filter">
+  <div class="filter text-center">
     <div><i class="fa-solid fa-cow"></i></div>
     <p>Farms</p>
   </div>
-   <div class="filter">
+   <div class="filter text-center">
     <div><i class="fa-solid fa-snowman"></i></div>
     <p>Arctic</p>
   </div>
-  <div class="filter">
+  <div class="filter text-center">
     <div><i class="fa-solid fa-igloo"></i></div>
     <p>Domes</p>
   </div>
-  <div class="filter">
+  <div class="filter text-center">
     <div><i class="fa-solid fa-ship"></i></div>
     <p>Boates</p>
   </div>
-  <div class="tax-toggle">
-    <div class="form-check-reverse form-switch">
+</div>
+
+<!-- //filter for sm screen -->
+ 
+  <div class="dropdown d-md-none d-lg-none ms-1 mt-2  ">
+    <button
+      class="btn btn-outline-dark dropdown-toggle text-center"
+      type="button"
+      id="filterDropdown"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      <i class="fa-solid fa-filter"></i>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-fire me-2"></i>Trending</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-bed me-2"></i>Rooms</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-mountain-city me-2"></i>Iconic Cities</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-mountain me-2"></i>Mountains</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-chess-rook me-2"></i>Castles</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-person-swimming me-2"></i>Amazing Pools</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-campground me-2"></i>Camping</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-cow me-2"></i>Farms</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-snowman me-2"></i>Arctic</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-igloo me-2"></i>Domes</a></li>
+      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-ship me-2"></i>Boats</a></li>
+    </ul>
+  </div>
+
+
+
+  <div class="tax-toggle text-center d-none d-lg-flex justify-content-center align-items-center ms-auto">
+    <div class="form-check-reverse form-switch ">
   <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
   <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
 </div>
   </div>
+
+
+
+  <div class= "text-center newtax ms-auto">
+     <div class="form-check-reverse form-switch ">
+  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault1">
+  <label class="form-check-label" for="switchCheckDefault1">Total taxes</label>
+  </div>
  </div>
 
-<div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 mt-3">
+</div>
+
+<div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-2 mt-3 g-4 d-flex ms-auto">
     <%for(listing of allListings){%>
-    <div class="card listing-card"style="width: 20rem;" >
-       <a href="/listings/<%= listing._id %>" class="listing-link">
+    <div class="card listing-card ms-2" >
+       <a href="/listings/<%= listing._id %>" class="listing-link text-dark">
       <img
         src="<%=listing.image.url %>"
         class="card-img-top frontpg"
         alt="listing_image"
-        style="height: 20rem"
+        
       />
-      <div class="card-img-overlay"><i class="fa-regular fa-heart"></i></div>
+      <div class="card-img-overlay  d-flex justify-content-end align-items-start p-2"><i class="fa-regular fa-heart"></i></div>
       <div class="card-body">
-       
         <p class="card-subtitle mb-2 text-body-secondary">
            <h5 class="card-title"><b><%=listing.title %></b></h5>
-          <b> &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>/night</b>
+          <b class="card-price"> &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>/night</b>
           <i class="tax-info"> &nbsp;&nbsp; +18% GST</i>
         </p>
+        </div>
       </a>
       </div>
-    </div>
 
     <% }%>
+
 </div>
 
 <script>
-  let toggleSwitch=document.getElementById("switchCheckDefault");
-  toggleSwitch.addEventListener("click",()=>{
-    let taxInfo=document.getElementsByClassName("tax-info");
+  let toggleLarge = document.getElementById("switchCheckDefault");
+  let toggleSmall = document.getElementById("switchCheckDefault1");
+  let taxInfo=document.getElementsByClassName("tax-info");
+   function toggleTaxInfo() {
+    let taxInfo = document.getElementsByClassName("tax-info");
+    
     for(info of taxInfo){
       if(info.style.display!="inline"){
         info.style.display="inline";
@@ -92,6 +135,7 @@
         info.style.display="none";
       }
     }
-  })
-
+  }
+  if (toggleLarge) toggleLarge.addEventListener("click", toggleTaxInfo);
+  if (toggleSmall) toggleSmall.addEventListener("click", toggleTaxInfo);
 </script>

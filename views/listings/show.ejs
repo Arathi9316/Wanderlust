@@ -8,13 +8,13 @@ const mapToken="<%= process.env.MAP_TOKEN%>";
  </script> 
 
 <div class="row mt-3">
-  <div class="col-8 offset-4">
+  <div class="col-8 offset-lg-3 offset-sm-1">
     <h3><%=listing.title%></h3>
   </div>
-  <div class="card col-6 offset-4" style="border: none">
+  <div class="card col-lg-6 col-md-8 col-sm-10 offset-lg-3 offset-sm-1" style="border: none">
     <img
       src="<%=listing.image.url%>"
-      class="card-img-top showpg"
+      class="card-img-top showpg "
       alt="listingimage"
     />
     <div class="card-body">
@@ -39,7 +39,7 @@ const mapToken="<%= process.env.MAP_TOKEN%>";
   <div class="btns">
     <a
       href="/listings/<%=listing._id%>/edit"
-      class="btn btn-dark offset-4 col-1 edit-btn"
+      class="btn btn-dark offset-md-2 offset-lg-3 offset-sm-1 col-md-1 col-sm-2 edit-btn"
     >
       Edit
     </a>
@@ -51,9 +51,9 @@ const mapToken="<%= process.env.MAP_TOKEN%>";
   </div>
   
 <% } %>
-  <hr  class="col-6 offset-4 mb-4">
+  <hr  class="col-lg-6 offset-lg-3 offset-sm-1 mb-4">
 
-  <div class="col-6 offset-4 mb-4">
+  <div class="col-lg-6 offset-lg-3 offset-sm-1 mb-4">
       <% if(currUser){ %>
     <h4>Leave a review</h4>
     <form
@@ -140,7 +140,7 @@ const mapToken="<%= process.env.MAP_TOKEN%>";
   </div>
  
 
-<div class="col-6 offset-4 mb-5">
+<div class="col-lg-6 offset-lg-3 offset-sm-1 mb-5">
   <h4>Where you'll be</h4>
  
   <div id="map"></div>
