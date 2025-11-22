@@ -2,7 +2,7 @@
 
 
 <!-- <h3>All listings</h3> -->
-<div class="d-flex">
+<div class="d-flex align-items-center mb-3">
  <div id="filters " class="d-none d-md-flex ms-3">
   <div class="filter text-center">
     <div><i class="fa-solid fa-fire"></i></div>
@@ -86,7 +86,7 @@
 
 
 
-  <div class= "text-center newtax ms-auto">
+  <div class= "text-center newtax ms-auto mt-2 mt-md-0 fs-6 p-md-3 ">
      <div class="form-check-reverse form-switch ">
   <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault1">
   <label class="form-check-label" for="switchCheckDefault1">Total taxes</label>
@@ -94,10 +94,11 @@
  </div>
 
 </div>
-
-<div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-2 mt-3 g-4 d-flex ms-auto">
+<!-- row row-cols-1 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 -->
+<div class="listings-container ">
     <%for(listing of allListings){%>
     <div class="card listing-card ms-2" >
+       
        <a href="/listings/<%= listing._id %>" class="listing-link text-dark">
       <img
         src="<%=listing.image.url %>"
@@ -105,7 +106,7 @@
         alt="listing_image"
         
       />
-      <div class="card-img-overlay  d-flex justify-content-end align-items-start p-2"><i class="fa-regular fa-heart"></i></div>
+     
       <div class="card-body">
         <p class="card-subtitle mb-2 text-body-secondary">
            <h5 class="card-title"><b><%=listing.title %></b></h5>
@@ -114,6 +115,7 @@
         </p>
         </div>
       </a>
+      <div class="card-img-overlay d-flex justify-content-end align-items-start"><i class="heart fa-regular fa-heart"></i></div>
       </div>
 
     <% }%>
@@ -138,4 +140,16 @@
   }
   if (toggleLarge) toggleLarge.addEventListener("click", toggleTaxInfo);
   if (toggleSmall) toggleSmall.addEventListener("click", toggleTaxInfo);
+  let hearts =document.querySelectorAll(".heart");
+  
+hearts.forEach(heart => {
+  heart.addEventListener("click", (e) => {
+    e.preventDefault();    // stops <a> click event
+    e.stopPropagation();   // prevents card redirect
+
+    heart.classList.toggle("fa-regular");
+    heart.classList.toggle("fa-solid");
+    heart.classList.toggle("text-danger");
+  });
+});
 </script>

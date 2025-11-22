@@ -73,6 +73,10 @@ body {
 
   transition: 0.3s;
 }
+.listings-container {
+  display: flex;
+  flex-wrap: wrap;
+}
 .card-img-top {
   border-radius: 1rem;
   width: 100%;
@@ -96,16 +100,22 @@ body {
 
 .card-img-overlay {
   font-size: 23px;
-  right: 1rem;
+  right: 0.5rem;
+  top: 0.5rem;
   left: auto;
   padding: 0;
+}
+.card-img-overlay {
+  font-size: 27px;
+  height: fit-content;
 }
 .listing-card {
   width: 20rem;
 }
 @media (min-width: 200px) and (max-width: 685px) {
   .listing-card {
-    width: 10rem;
+    width: 9rem;
+    margin-right: 1rem;
   }
   .card-img-top {
     height: 10rem;
@@ -116,6 +126,19 @@ body {
   }
   .card-price {
     font-size: 0.7rem;
+  }
+  .tax-info {
+    font-size: 0.7rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1027px) {
+  .listing-card {
+    width: 20rem;
+    margin: 2rem;
+  }
+  .arctic {
+    display: none;
   }
 }
 
@@ -170,7 +193,7 @@ body {
   height: 3.24rem;
   padding: 1rem;
   margin-left: 2rem;
-  margin-top: 1.5rem;
+
   position: relative;
 }
 /* dropdown */
@@ -190,11 +213,12 @@ body {
   padding: 0.5rem;
   display: none;
   margin-left: 2rem;
-  margin-top: 0.5rem;
+  /* margin-top: 0.5rem; */
   height: 1rem;
+  width: auto;
   box-sizing: unset;
 }
-@media (min-width: 200px) and (max-width: 998px) {
+@media (min-width: 200px) and (max-width: 991px) {
   .newtax {
     display: flex;
     align-items: center;
@@ -233,4 +257,11 @@ body {
 .search-inp {
   border-radius: 25px;
   padding: 0.5rem 3rem 0.5rem 3rem;
+}
+@media (min-width: 0px) and (max-width: 835px) {
+  .search-inp {
+    padding: 0.2rem 1rem 0.2rem 1rem;
+    font-size: 0.8rem;
+    margin-left: 0;
+  }
 }
