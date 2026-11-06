@@ -1,155 +1,350 @@
-<%-layout("/layouts/boilerplate") %>
+<% layout("/layouts/boilerplate") %>
 
+<%
+  // Category chips. "keys" are matched against title + description + location + country.
+  // (Your Listing model has no "category" field yet, so filtering is keyword based.)
+  const filters = [
+    { label: "Trending",      icon: "fa-fire",          keys: [] },
+    { label: "Rooms",         icon: "fa-bed",           keys: ["apartment", "loft", "penthouse", "condo", "room"] },
+    { label: "Iconic Cities", icon: "fa-mountain-city", keys: ["new york", "tokyo", "amsterdam", "boston", "miami", "los angeles", "dubai", "florence", "charleston"] },
+    { label: "Mountains",     icon: "fa-mountain",      keys: ["mountain", "ski", "chalet", "aspen", "banff", "alps"] },
+    { label: "Castles",       icon: "fa-chess-rook",    keys: ["castle", "villa", "historic"] },
+    { label: "Amazing pools", icon: "fa-person-swimming", keys: ["pool", "infinity", "oasis"] },
+    { label: "Camping",       icon: "fa-campground",    keys: ["cabin", "camp", "treehouse", "log"] },
+    { label: "Farms",         icon: "fa-cow",           keys: ["farm", "cottage", "thatched"] },
+    { label: "Arctic",        icon: "fa-snowman",       keys: ["arctic", "snow", "ski", "highlands"] },
+    { label: "Domes",         icon: "fa-igloo",         keys: ["dome", "igloo"] },
+    { label: "Boats",         icon: "fa-ship",          keys: ["boat", "yacht", "overwater", "island"] }
+  ];
+%>
 
-<!-- <h3>All listings</h3> -->
-<div class="d-flex align-items-center mb-3">
- <div id="filters " class="d-none d-md-flex ms-3">
-  <div class="filter text-center">
-    <div><i class="fa-solid fa-fire"></i></div>
-    <p>Trending</p>
-  </div>
-   <div class="filter text-center">
-    <div><i class="fa-solid fa-bed"></i></div>
-    <p>Rooms</p>
-  </div>
-   <div class="filter text-center">
-    <div><i class="fa-solid fa-mountain-city"></i></div>
-    <p>Iconic Cities</p>
-  </div>
-  
-  <div class="filter text-center">
-    <div><i class="fa-solid fa-chess-rook"></i></div>
-    <p>Castles</p>
-  </div>
-   <div class="filter text-center">
-    <div><i class="fa-solid fa-person-swimming"></i></div>
-    <p>Amazing pools</p>
-  </div>
- 
-  <div class="filter text-center">
-   <div><i class="fa-solid fa-campground"></i></div>
-    <p>Camping</p>
-  </div>
-  <div class="filter text-center">
-    <div><i class="fa-solid fa-cow"></i></div>
-    <p>Farms</p>
-  </div>
-   <div class="filter text-center">
-    <div><i class="fa-solid fa-snowman"></i></div>
-    <p>Arctic</p>
-  </div>
-  <div class="filter text-center">
-    <div><i class="fa-solid fa-igloo"></i></div>
-    <p>Domes</p>
-  </div>
-  <div class="filter text-center">
-    <div><i class="fa-solid fa-ship"></i></div>
-    <p>Boates</p>
-  </div>
-</div>
+<style>
+  /* Everything here is scoped to the home page so it cannot clash with style.css */
+  .home-wrap {
+    padding: 0.75rem 0.5rem 0;
+  }
+  @media (min-width: 768px) {
+    .home-wrap { padding: 1rem 1.5rem 0; }
+  }
 
-<!-- //filter for sm screen -->
- 
-  <div class="dropdown d-md-none d-lg-none ms-1 mt-2  ">
-    <button
-      class="btn btn-outline-dark dropdown-toggle text-center"
-      type="button"
-      id="filterDropdown"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-    >
-      <i class="fa-solid fa-filter"></i>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="filterDropdown">
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-fire me-2"></i>Trending</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-bed me-2"></i>Rooms</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-mountain-city me-2"></i>Iconic Cities</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-mountain me-2"></i>Mountains</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-chess-rook me-2"></i>Castles</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-person-swimming me-2"></i>Amazing Pools</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-campground me-2"></i>Camping</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-cow me-2"></i>Farms</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-snowman me-2"></i>Arctic</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-igloo me-2"></i>Domes</a></li>
-      <li><a class="dropdown-item filter" href="#"><i class="fa-solid fa-ship me-2"></i>Boats</a></li>
-    </ul>
+  /* ---------- Toolbar: filters + tax switch ---------- */
+  .home-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .chip-scroller {
+    flex: 1 1 auto;
+    min-width: 0;                 /* lets the row shrink so it can scroll */
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.25rem 0.1rem 0.5rem;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .chip {
+    flex: 0 0 auto;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 4.5rem;
+    padding: 0.4rem 0.75rem;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    color: #222;
+    opacity: 0.65;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: opacity 0.2s, border-color 0.2s;
+  }
+  .chip i { font-size: 1.15rem; }
+  .chip:hover { opacity: 1; }
+  .chip.active {
+    opacity: 1;
+    font-weight: 600;
+    border-bottom-color: #222;
+  }
+  .chip:focus-visible {
+    outline: 2px solid #fe424d;
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+
+  .tax-switch {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 1px solid #222;
+    border-radius: 0.8rem;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .tax-switch .form-check-input { margin: 0; cursor: pointer; }
+  .tax-switch label { cursor: pointer; margin: 0; }
+  .tax-switch .label-short { display: none; }
+
+  @media (max-width: 767.98px) {
+    .home-toolbar { flex-wrap: wrap; }
+    .chip-scroller { flex-basis: 100%; order: 2; }
+    .tax-switch { order: 1; margin-left: auto; padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+    .tax-switch .label-long { display: none; }
+    .tax-switch .label-short { display: inline; }
+  }
+
+  /* ---------- Listing grid ---------- */
+  .listing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    gap: 1.75rem 1.25rem;
+    padding-bottom: 2rem;
+  }
+  @media (max-width: 575.98px) {
+    .listing-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem 0.75rem;
+    }
+  }
+  @media (max-width: 359.98px) {
+    .listing-grid { grid-template-columns: 1fr; }
+  }
+
+  .listing-item { min-width: 0; }
+  .listing-item[hidden] { display: none; }
+
+  .img-wrap { position: relative; }
+  .listing-img,
+  .listing-img-empty {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 1rem;
+    background: #ececec;
+    transition: transform 0.25s, box-shadow 0.25s, opacity 0.25s;
+  }
+  .img-wrap:hover .listing-img {
+    opacity: 0.9;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  }
+  .listing-link,
+  .listing-link:hover {
+    text-decoration: none;
+    color: #222;
+  }
+  .listing-info { padding-top: 0.6rem; }
+  .listing-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 0.15rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .listing-meta {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin: 0 0 0.2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .listing-price { font-size: 0.9rem; margin: 0; }
+  .gst-note { display: none; font-style: italic; margin-left: 0.4rem; }
+  .show-gst .gst-note { display: inline; }
+  @media (max-width: 575.98px) {
+    .listing-title { font-size: 0.9rem; }
+    .listing-meta, .listing-price { font-size: 0.75rem; }
+  }
+
+  .heart-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    border: 0;
+    background: transparent;
+    padding: 0.25rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+  }
+  .heart-btn.liked { color: #fe424d; text-shadow: none; }
+  .heart-btn:focus-visible { outline: 2px solid #fe424d; border-radius: 50%; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+  }
+  .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; color: #fe424d; }
+</style>
+
+<div class="home-wrap">
+
+  <!-- Filters + tax switch -->
+  <div class="home-toolbar">
+    <div class="chip-scroller" role="tablist" aria-label="Filter listings by category">
+      <% filters.forEach(function (f, i) { %>
+        <button
+          type="button"
+          class="chip<%= i === 0 ? ' active' : '' %>"
+          data-keys="<%= f.keys.join('|') %>"
+          aria-pressed="<%= i === 0 ? 'true' : 'false' %>"
+        >
+          <i class="fa-solid <%= f.icon %>"></i>
+          <span><%= f.label %></span>
+        </button>
+      <% }) %>
+    </div>
+
+    <div class="tax-switch form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="taxSwitch" />
+      <label class="form-check-label" for="taxSwitch">
+        <span class="label-long">Display total after taxes</span>
+        <span class="label-short">Total after tax</span>
+      </label>
+    </div>
   </div>
 
+  <% if (!allListings || allListings.length === 0) { %>
+    <div class="empty-state">
+      <div><i class="fa-regular fa-compass"></i></div>
+      <h5>No listings yet</h5>
+      <p class="mb-3">Be the first to list a home.</p>
+      <a href="/listings/new" class="btn btn-dark">List your home</a>
+    </div>
+  <% } else { %>
 
+    <div class="listing-grid" id="listingGrid">
+      <% allListings.forEach(function (listing) {
+           const imgUrl   = listing.image && listing.image.url ? listing.image.url : "";
+           const hasPrice = typeof listing.price === "number";
+           const searchText = [listing.title, listing.description, listing.location, listing.country]
+             .filter(Boolean).join(" ").toLowerCase();
+      %>
+        <article class="listing-item" data-search="<%= searchText %>">
+          <div class="img-wrap">
+            <a href="/listings/<%= listing._id %>" class="listing-link" aria-label="<%= listing.title %>">
+              <% if (imgUrl) { %>
+                <img
+                  src="<%= imgUrl %>"
+                  class="listing-img"
+                  alt="<%= listing.title %>"
+                  loading="lazy"
+                />
+              <% } else { %>
+                <div class="listing-img-empty"></div>
+              <% } %>
+            </a>
+            <button type="button" class="heart-btn" aria-label="Save to wishlist" aria-pressed="false">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+          </div>
 
-  <div class="tax-toggle text-center d-none d-lg-flex justify-content-center align-items-center ms-auto">
-    <div class="form-check-reverse form-switch ">
-  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
-  <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
-</div>
-  </div>
+          <a href="/listings/<%= listing._id %>" class="listing-link">
+            <div class="listing-info">
+              <h5 class="listing-title"><%= listing.title %></h5>
+              <% if (listing.location) { %>
+                <p class="listing-meta"><%= listing.location %><%= listing.country ? ", " + listing.country : "" %></p>
+              <% } %>
+              <p class="listing-price">
+                <b>
+                  &#8377;
+                  <span
+                    class="price-value"
+                    <% if (hasPrice) { %>data-price="<%= listing.price %>"<% } %>
+                  ><%= hasPrice ? listing.price.toLocaleString("en-IN") : "N/A" %></span>
+                  /night
+                </b>
+                <i class="gst-note">+18% GST</i>
+              </p>
+            </div>
+          </a>
+        </article>
+      <% }) %>
+    </div>
 
+    <div class="empty-state" id="noMatch" hidden>
+      <div><i class="fa-solid fa-magnifying-glass"></i></div>
+      <h5>No listings match this filter</h5>
+      <p class="mb-0">Try another category.</p>
+    </div>
 
-
-  <div class= "text-center newtax ms-auto mt-2 mt-md-0 fs-6 p-md-3 ">
-     <div class="form-check-reverse form-switch ">
-  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault1">
-  <label class="form-check-label" for="switchCheckDefault1">Total taxes</label>
-  </div>
- </div>
-
-</div>
-<!-- row row-cols-1 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 -->
-<div class="listings-container ">
-    <%for(listing of allListings){%>
-    <div class="card listing-card ms-2" >
-       
-       <a href="/listings/<%= listing._id %>" class="listing-link text-dark">
-      <img
-        src="<%=listing.image.url %>"
-        class="card-img-top frontpg"
-        alt="listing_image"
-        
-      />
-     
-      <div class="card-body">
-        <p class="card-subtitle mb-2 text-body-secondary">
-           <h5 class="card-title"><b><%=listing.title %></b></h5>
-          <b class="card-price"> &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>/night</b>
-          <i class="tax-info"> &nbsp;&nbsp; +18% GST</i>
-        </p>
-        </div>
-      </a>
-      <div class="card-img-overlay d-flex justify-content-end align-items-start"><i class="heart fa-regular fa-heart"></i></div>
-      </div>
-
-    <% }%>
-
+  <% } %>
 </div>
 
 <script>
-  let toggleLarge = document.getElementById("switchCheckDefault");
-  let toggleSmall = document.getElementById("switchCheckDefault1");
-  let taxInfo=document.getElementsByClassName("tax-info");
-   function toggleTaxInfo() {
-    let taxInfo = document.getElementsByClassName("tax-info");
-    
-    for(info of taxInfo){
-      if(info.style.display!="inline"){
-        info.style.display="inline";
-      }
-      else{
-        info.style.display="none";
-      }
-    }
-  }
-  if (toggleLarge) toggleLarge.addEventListener("click", toggleTaxInfo);
-  if (toggleSmall) toggleSmall.addEventListener("click", toggleTaxInfo);
-  let hearts =document.querySelectorAll(".heart");
-  
-hearts.forEach(heart => {
-  heart.addEventListener("click", (e) => {
-    e.preventDefault();    // stops <a> click event
-    e.stopPropagation();   // prevents card redirect
+  (function () {
+    var grid    = document.getElementById("listingGrid");
+    var noMatch = document.getElementById("noMatch");
+    var taxBox  = document.getElementById("taxSwitch");
+    var GST     = 0.18;
 
-    heart.classList.toggle("fa-regular");
-    heart.classList.toggle("fa-solid");
-    heart.classList.toggle("text-danger");
-  });
-});
+    /* ---------- Tax switch: show +18% GST note and the total price ---------- */
+    function formatINR(n) {
+      return Math.round(n).toLocaleString("en-IN");
+    }
+    function applyTax() {
+      if (!grid) return;
+      var on = taxBox.checked;
+      grid.classList.toggle("show-gst", on);
+      grid.querySelectorAll(".price-value").forEach(function (el) {
+        var base = el.getAttribute("data-price");
+        if (base === null) return;           // "N/A" prices stay as they are
+        var n = Number(base);
+        el.textContent = formatINR(on ? n * (1 + GST) : n);
+      });
+    }
+    if (taxBox) taxBox.addEventListener("change", applyTax);
+
+    /* ---------- Heart (wishlist) buttons ---------- */
+    document.querySelectorAll(".heart-btn").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var icon  = btn.querySelector("i");
+        var liked = btn.classList.toggle("liked");
+        icon.classList.toggle("fa-regular", !liked);
+        icon.classList.toggle("fa-solid", liked);
+        btn.setAttribute("aria-pressed", liked ? "true" : "false");
+      });
+    });
+
+    /* ---------- Category filter chips (keyword based) ---------- */
+    var chips = document.querySelectorAll(".chip");
+    function setActive(chip) {
+      chips.forEach(function (c) {
+        var on = c === chip;
+        c.classList.toggle("active", on);
+        c.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+    }
+    function applyFilter(chip) {
+      if (!grid) return;
+      var raw  = chip.getAttribute("data-keys");
+      var keys = raw ? raw.split("|") : [];
+      var shown = 0;
+      grid.querySelectorAll(".listing-item").forEach(function (item) {
+        var text  = item.getAttribute("data-search") || "";
+        var match = keys.length === 0 || keys.some(function (k) { return text.indexOf(k) !== -1; });
+        item.hidden = !match;
+        if (match) shown++;
+      });
+      if (noMatch) noMatch.hidden = shown !== 0;
+    }
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        setActive(chip);
+        applyFilter(chip);
+      });
+    });
+  })();
 </script>

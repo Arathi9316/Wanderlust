@@ -62,7 +62,7 @@ router
     isLoggedin,
     validateListing,
     upload.single("listing[image]"),
-    wrapAsync(listingController.createListing)
+    wrapAsync(listingController.createListing),
   );
 
 //new route
@@ -73,10 +73,9 @@ router
   .put(
     isLoggedin,
     isOwner,
-
     upload.single("listing[image]"),
     validateListing,
-    wrapAsync(listingController.updateListing)
+    wrapAsync(listingController.updateListing),
   )
   .delete(isLoggedin, isOwner, wrapAsync(listingController.destroyListing));
 
@@ -85,7 +84,7 @@ router.get(
   "/:id/edit",
   isLoggedin,
   isOwner,
-  wrapAsync(listingController.renderEditForm)
+  wrapAsync(listingController.renderEditForm),
 );
 //for search
 router.post("/search", listingController.searchListing);

@@ -13,7 +13,7 @@ module.exports.index = async (req, res) => {
 module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
-
+/*
 module.exports.showListing = async (req, res) => {
   let { id } = req.params;
 
@@ -31,7 +31,7 @@ module.exports.showListing = async (req, res) => {
   }
   res.render("listings/show.ejs", { listing });
 };
-
+*/
 module.exports.createListing = async (req, res, next) => {
   //let { title, description, price, image, location, country } = req.body;//make listing object in new.ejs listing[title]
   //----------------for server side validation ---------
@@ -41,10 +41,14 @@ module.exports.createListing = async (req, res, next) => {
   let response = await geocodingClient
     .forwardGeocode({
       query: req.body.listing.location,
+      // query: "Pune",
       limit: 1,
     })
     .send();
-
+  if (!response.body.features.length) {
+    req.flash("error", "Location not found, try a more specific place.");
+    return res.redirect("/listings/new");
+  }
   let url = req.file.path;
   let filename = req.file.filename;
   console.log(url, " ", filename);
@@ -118,6 +122,7 @@ module.exports.destroyListing = async (req, res) => {
 };
 
 //Map
+/*
 module.exports.showListing = async (req, res) => {
   const listing = await Listing.findById(req.params.id)
     .populate({ path: "reviews", populate: { path: "author" } })
@@ -129,7 +134,25 @@ module.exports.showListing = async (req, res) => {
     mapToken: process.env.MAP_TOKEN,
   });
 };
+*/
+module.exports.showListing = async (req, res) => {
+  const listing = await Listing.findById(req.params.id)
+    .populate({
+      path: "reviews",
+      populate: { path: "author" },
+    })
+    .populate("owner");
 
+  if (!listing) {
+    req.flash("error", "Listing doesn't exist");
+    return res.redirect("/listings");
+  }
+
+  res.render("listings/show.ejs", {
+    listing,
+    mapToken: process.env.MAP_TOKEN,
+  });
+};
 //for search
 module.exports.searchListing = async (req, res, next) => {
   try {
