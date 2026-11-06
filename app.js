@@ -118,10 +118,8 @@ store.on("error", (err) => {
 });
 
 const port = process.env.PORT || 8080;
-if (!process.env.VERCEL) {
-  app.listen(port, () => {
-    console.log(`Server is listening to port ${port}`);
-  });
-}
+app.listen(port, () => {
+  console.log(`Server is listening to port ${port}`);
+});
 
 module.exports = app;
