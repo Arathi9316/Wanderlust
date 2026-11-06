@@ -27,7 +27,7 @@ module.exports.showListing = async (req, res) => {
     .populate("owner");
   if (!listing) {
     req.flash("error", "Listing you are requesting for doesn't exist.");
-    res.redirect("/listings");
+    return res.redirect("/listings");
   }
   res.render("listings/show.ejs", { listing });
 };
@@ -73,7 +73,7 @@ module.exports.renderEditForm = async (req, res) => {
   const listing = await Listing.findById(id);
   if (!listing) {
     req.flash("error", "Listing you are requesting for doesn't exist.");
-    res.redirect("/listings");
+    return res.redirect("/listings");
   }
   let originalImageUrl = listing.image.url;
   originalImageUrl = originalImageUrl.replace("/upload", "/upload/h_300/w_250");
