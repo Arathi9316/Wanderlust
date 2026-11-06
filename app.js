@@ -113,9 +113,15 @@ app.use((err, req, res, next) => {
   // res.status(status).send(message);
 });
 
-app.listen(8080, () => {
-  console.log("Server is listening to port 8080");
-});
 store.on("error", (err) => {
   console.log("Error in Mongo session store", err);
 });
+
+const port = process.env.PORT || 8080;
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`Server is listening to port ${port}`);
+  });
+}
+
+module.exports = app;
